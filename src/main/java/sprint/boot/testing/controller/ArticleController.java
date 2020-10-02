@@ -1,12 +1,12 @@
 package sprint.boot.testing.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,17 +40,41 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/articles/add")
-	public void addArticle(@RequestBody Map<String, String> article) {
-		articleMapper.add(article.get("title"), article.get("author"));
+	public Map<String, String> addArticle(@RequestBody Map<String, String> article) {
+		try {
+			articleMapper.add(article.get("title"), article.get("author"));
+			article.put("status", "created");
+			return article;
+		} catch (Exception e) {
+			article.put("status", "create fail");
+			return article;
+		}
 	}
 
 	@PutMapping("/articles/update/{id}")
-	public void updateArticle(@PathVariable("id") long id, @RequestBody Map<String, String> article) {
-		articleMapper.update(id, article.get("title"), article.get("author"));
+	public Map<String, String> updateArticle(@PathVariable("id") long id, @RequestBody Map<String, String> article) {
+		try {
+			articleMapper.update(id, article.get("title"), article.get("author"));
+			article.put("status", "updated");
+			return article;
+		} catch (Exception e) {
+			article.put("status", "update fail");
+			return article;
+		}
+
 	}
 
 	@DeleteMapping("/articles/delete/{id}")
-	public void deleteArticle(@PathVariable("id") long id) {
-		articleMapper.delete(id);
+	public Map<String, String> deleteArticle(@PathVariable("id") long id) {
+		Map<String, String> json = new HashMap<String, String>();
+		try {
+			articleMapper.delete(id);
+			json.put("status", "deleted");
+			return json;
+		} catch (Exception e) {
+			json.put("status", "delete fail");
+			return json;
+		}
+
 	}
 }

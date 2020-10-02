@@ -26,11 +26,11 @@ public interface ArticleMapper {
 	List<Article> findAll();
 
 	@Insert("INSERT INTO article(title, author) VALUES( #{title} , #{author} )")
-	String add(String title, String author);
+	int add(String title, String author);
 	
 	@Update("UPDATE article SET title = #{title}, author = #{author} WHERE id = #{id}")
-	String update(long id, String title, String author);
+	int update(long id, String title, String author);
 	
 	@Delete("DELETE FROM article WHERE id = #{id}")
-	String delete(long id);
+	int delete(long id);
 }
